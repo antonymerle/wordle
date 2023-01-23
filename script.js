@@ -20,6 +20,11 @@
   TODO : afficher la règle du wordle quand grille absente
 */
 
+// game state, variables et constantes
+
+const ROWS = 6;
+let COLS = 0;
+
 let gameState = {
   score: 0,
   board: null,
@@ -27,14 +32,6 @@ let gameState = {
   inputArray: [],
   charCountInline: 0,
 };
-
-// let score = 0;
-// let board = null;
-// let mysteryWord = "";
-// let inputArray = [];
-// let charCountInline = 0;
-const ROWS = 6;
-let COLS = 0;
 
 // Condition pour contrer le fetch intempestif à chaque touche ENTER pressée
 // l'event "click" sur le boutton newGame était déclenché.
@@ -46,6 +43,8 @@ document.querySelector("#newGame").addEventListener("keydown", (e) => {
     e.preventDefault();
   }
 });
+
+// logic
 
 document.querySelector("#newGame").addEventListener("click", (e) => {
   console.log("*************** FETCH *************");
