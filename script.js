@@ -21,8 +21,7 @@
 */
 
 let score = 0;
-let fetched = false;
-let gameOn = false;
+
 let board = null;
 let mysteryWord = "";
 let inputArray = [];
@@ -66,12 +65,6 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
       displayBoard();
       generateHTMLTable();
 
-      fetched = true;
-      gameOn = true;
-
-      // console.log(data);
-      // console.log(newGame);
-      // console.log("mysteryWord");
       console.log(mysteryWord);
 
       // prise en charge input
@@ -249,8 +242,6 @@ function displayScore() {
 }
 
 function resetState() {
-  fetched = false;
-  gameOn = false;
   board = null;
   mysteryWord = "";
   inputArray = [];
