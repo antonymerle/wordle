@@ -15,7 +15,18 @@
   </head>
 
   <body>
-    <div id="header">
+    <header id="header">
+      <div id="choose-lang">
+        <label for="lang-select">Choose a language:</label>
+        <select id="#lang-select">
+          class="form-select form-select-lg mb-3" aria-label=".form-select-lg
+          example" >
+          <option value="1">English</option>
+          <option value="2">French</option>
+          <option value="3">Spanish</option>
+          <option value="4">German</option>
+        </select>
+      </div>
       <div class="smallSection">
         <h4>Score: <span id="score">0</span></h4>
       </div>
@@ -23,7 +34,7 @@
       <div class="smallSection">
         <button type="button" id="newGame">NEW GAME</button>
       </div>
-    </div>
+    </header>
     <main>
       <div id="rules">
         <h2>How to play :</h2>
