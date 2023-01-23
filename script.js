@@ -21,7 +21,6 @@
 */
 
 let score = 0;
-
 let board = null;
 let mysteryWord = "";
 let inputArray = [];
@@ -47,25 +46,8 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
   fetch("https://random-word-api.herokuapp.com/word?length=5")
     .then((response) => response.json())
     .then((data) => {
-      console.log("INIT GAME");
-
-      const table = document.querySelector("table");
-      if (table) table.remove();
-      document.querySelector("#result").textContent = "";
-      document.querySelector("#result").style.color = "black";
-      mysteryWord = data[0];
-
-      // initialisation des données du jeu
-      displayScore();
-      mysteryWord = data[0];
-      COLS = mysteryWord.length;
-
-      // génération du tableau
-      board = initBoard(ROWS, COLS);
-      displayBoard();
-      generateHTMLTable();
-
-      console.log(mysteryWord);
+      // itinialisation
+      initGame(data);
 
       // prise en charge input
       console.log("prise en charge input");
@@ -249,4 +231,26 @@ function resetState() {
   COLS = 0;
 
   console.log("state reset");
+}
+
+function initGame(wordFromApi) {
+  // expects an array of 1 string
+  console.log("INIT GAME");
+  const table = document.querySelector("table");
+  if (table) table.remove();
+  document.querySelector("#result").textContent = "";
+  document.querySelector("#result").style.color = "black";
+  mysteryWord = wordFromApi[0];
+
+  // initialisation des données du jeu
+  displayScore();
+
+  COLS = mysteryWord.length;
+
+  // génération du tableau
+  board = initBoard(ROWS, COLS);
+  displayBoard();
+  generateHTMLTable();
+
+  console.log(mysteryWord);
 }
