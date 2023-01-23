@@ -135,7 +135,7 @@ function getKeyboardInput() {
 
   window.addEventListener("keyup", (e) => {
     // e.preventDefault();
-    e.stopImmediatePropagation();
+    e.stopImmediatePropagation(); // nécessaire pour ne pas doubler l'input à chaque nouvelle partie
     // Discard non letters
     document.querySelector("#result").textContent = "";
     if (
