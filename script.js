@@ -43,8 +43,8 @@ document.querySelector("#newGame").addEventListener("keydown", (e) => {
 
 document.querySelector("#newGame").addEventListener("click", (e) => {
   console.log("*************** FETCH *************");
-  e.preventDefault();
-  e.stopImmediatePropagation();
+  // e.preventDefault();
+  // e.stopImmediatePropagation();
   fetch("https://random-word-api.herokuapp.com/word?length=5")
     .then((response) => response.json())
     .then((data) => {
@@ -134,8 +134,8 @@ function getKeyboardInput() {
   const lineLength = board[0].length;
 
   window.addEventListener("keyup", (e) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    // e.preventDefault();
+    // e.stopImmediatePropagation();
     // Discard non letters
     document.querySelector("#result").textContent = "";
     if (
