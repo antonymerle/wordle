@@ -5,6 +5,7 @@
   DONE : réinitialiser l'état si newGame en pleine partie (sans faire sauter la protection fetched)
   DONE : résoudre le fetch intempestif
   DONE : afficher la règle du wordle quand grille absente
+  DONE : newGame en cours de partie ne réinitialise pas arrayInput
   TODO : responsive design
   TODO : toggle règle/grille
   TODO : choix de la langue
@@ -40,6 +41,7 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
   console.log("*************** FETCH *************");
   // e.preventDefault();
   // e.stopImmediatePropagation();
+  resetState();
   fetch("https://random-word-api.herokuapp.com/word?length=5")
     .then((response) => response.json())
     .then((data) => {
