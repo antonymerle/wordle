@@ -1,23 +1,13 @@
 /*
-
-  Au clic sur le bouton New Game (#newGame), 
-  la route précédemment créée doit se lancer et une nouvelle partie doit démarrer 
-  en faisant afficher le tableau de jeu (#game-board). 
-  Votre tableau de jeu comprendra 6 rangs horizontaux qui devront porter la class "letter-row" 
-  et le nombre de cases verticales devra correspondre au nombre de lettres dans votre mot.
-
-  [LIGNES][COLONNES]
-  [i][j]
-
   DONE : filtrer les non caractères du clavier (tab, etc)
   DONE : changer background-color en fonction de la lettre
   DONE : arrêter la saisie si line pleine
-  TODO : réinitialiser l'état si newGame en pleine partie (sans faire sauter la protection fetched)
-  TODO : fetched = true; => newGame ignore nouveau mot du backend
-        1. bouton newGame se transforme en bouton reset game
-        2. variable gameOn : boolean
-        3. 3e condition (fetched && gameOn true)
-  TODO : afficher la règle du wordle quand grille absente
+  DONE : réinitialiser l'état si newGame en pleine partie (sans faire sauter la protection fetched)
+  DONE : résoudre le fetch intempestif
+  DONE : afficher la règle du wordle quand grille absente
+  TODO : responsive design
+  TODO : toggle règle/grille
+  TODO : choix de la langue
 */
 
 // game state, variables et constantes
@@ -35,7 +25,7 @@ let gameState = {
 
 // Condition pour contrer le fetch intempestif à chaque touche ENTER pressée
 // l'event "click" sur le boutton newGame était déclenché.
-//
+
 document.querySelector("#newGame").addEventListener("keydown", (e) => {
   const key = e.keyCode || e.charCode;
   if (key == 13) {
