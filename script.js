@@ -54,6 +54,9 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
     .then((response) => response.json())
     .then((data) => {
       // itinialisation
+      if (data) {
+        concealRule();
+      }
       initGame(data);
 
       // prise en charge input
@@ -124,19 +127,7 @@ function getKeyboardInput() {
     }
 
     // game over if board is full
-    if (gameState.inputArray.length >= gameState.board.length * lineLength) {
-      checkLine(gameState.inputArray.length, gameState.mysteryWord);
-      document.querySelector("#result").textContent = "GAME OVER";
-      document.querySelector("#result").style.color = "var(--brun)";
-      console.log("debug");
-
-      // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
-      setTimeout(() => {
-        resetState();
-      }, 2000);
-
-      console.log("return défaite");
-    }
+    checkDefeat(lineLength);
 
     // Handle saisie
     const letter = e.key.toUpperCase();
@@ -262,6 +253,7 @@ function initGame(wordFromApi) {
   const table = document.querySelector("table");
   if (table) table.remove();
   document.querySelector("#result").textContent = "";
+  document.querySelector("#soluce").textContent = "";
   document.querySelector("#result").style.color = "black";
   gameState.mysteryWord = wordFromApi[0];
 
@@ -277,3 +269,36 @@ function initGame(wordFromApi) {
 
   console.log(gameState.mysteryWord);
 }
+
+function checkDefeat(lineLength) {
+  if (gameState.inputArray.length >= gameState.board.length * lineLength) {
+    checkLine(gameState.inputArray.length, gameState.mysteryWord);
+    document.querySelector("#result").textContent = "GAME OVER";
+    document.querySelector("#result").style.color = "var(--brun)";
+
+    revealSoluce();
+
+    // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
+    setTimeout(() => {
+      resetState();
+    }, 2000);
+
+    console.log("return défaite");
+  }
+}
+
+function revealSoluce() {
+  document.querySelector("#soluce").textContent =
+    "Soluce : " + gameState.mysteryWord;
+  document.querySelector("#soluce").style.color = "var(--brun)";
+}
+
+function concealRule() {
+  document.querySelector("#rules").style.display = "none";
+}
+
+function printYear() {
+  document.querySelector("#date").innerHTML = new Date().getFullYear();
+}
+
+printYear();
