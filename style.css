@@ -5,9 +5,17 @@
   --tileGreen: #71964f;
 }
 
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
 body {
   height: 100vh;
   width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #faf8ef;
@@ -57,6 +65,13 @@ h4 {
   font-family: "Roboto Slab", serif;
 }
 
+#result-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 #game-board {
   display: flex;
   align-items: center;
@@ -83,7 +98,8 @@ h4 {
   display: flex;
 }
 
-#result {
+#result,
+#soluce {
   margin-top: 25px;
   display: flex;
   justify-content: center;
@@ -93,4 +109,41 @@ h4 {
   font-size: 42px;
   text-shadow: 2px 2px black;
   color: black;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#rules {
+  font-family: "Roboto Slab", serif;
+  display: block;
+  text-align: left;
+  margin: auto;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+  /* margin: auto; */
+}
+#rules ul {
+  list-style: none;
+}
+
+footer {
+  font-family: "Roboto Slab", serif;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+#repo {
+  margin-left: 1rem;
+}
+
+a {
+  color: var(--brun);
+  text-decoration: none; /* no underline */
 }
