@@ -61,7 +61,7 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
         mysteryWord = data[0];
 
         // initialisation des données du jeu
-        displayScore(score);
+        displayScore();
         mysteryWord = data[0];
         COLS = mysteryWord.length;
 
@@ -243,12 +243,13 @@ function checkLine(indexOfLastChar, mysteryWord) {
       document.querySelector("#result").textContent = "YOU WON!";
       document.querySelector("#result").style.color = "var(--tileGreen)";
       document.querySelector("#result").style.textShadow = "1px 1px black";
+      displayScore(++score);
       resetState();
     }, 2000);
   }
 }
 
-function displayScore(id) {
+function displayScore() {
   document.querySelector("#score").textContent = score;
 }
 
