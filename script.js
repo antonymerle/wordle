@@ -20,13 +20,6 @@
   TODO : afficher la règle du wordle quand grille absente
 */
 
-let newGame = {
-  result: false,
-  gameId: "",
-  wordLength: 0,
-  word: "",
-};
-
 let score = 0;
 let fetched = false;
 let gameOn = false;
@@ -65,10 +58,10 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
         if (table) table.remove();
         document.querySelector("#result").textContent = "";
         document.querySelector("#result").style.color = "black";
-        const mysteryWord = data[0];
+        mysteryWord = data[0];
 
         // initialisation des données du jeu
-        diplayID(newGame.gameId);
+        displayScore(score);
         mysteryWord = data[0];
         COLS = mysteryWord.length;
 
@@ -82,8 +75,8 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
       }
 
       // console.log(data);
-      console.log(newGame);
-      console.log("mysteryWord");
+      // console.log(newGame);
+      // console.log("mysteryWord");
       console.log(mysteryWord);
 
       // prise en charge input
@@ -182,7 +175,7 @@ function getKeyboardInput() {
 
       inputArray.pop();
       charCountInline--;
-    } else if (letter != "ENTER" && charCountInline < newGame.wordLength) {
+    } else if (letter != "ENTER" && charCountInline < mysteryWord.length) {
       // on n'enregistre l'entrée que si le nombre de lettres ne dépasse pas la limite de la ligne
       inputArray.push(letter);
       charCountInline++;
@@ -237,7 +230,7 @@ function checkLine(indexOfLastChar, mysteryWord) {
         }
         console.log("indice :" + 300 * ind);
       }, 300 * ind);
-    })(i % newGame.wordLength);
+    })(i % mysteryWord.length);
   }
   const lineContent = inputArray.slice(startIndex, indexOfLastChar).join("");
 
@@ -255,8 +248,8 @@ function checkLine(indexOfLastChar, mysteryWord) {
   }
 }
 
-function diplayID(id) {
-  document.querySelector("#gameId").textContent = id;
+function displayScore(id) {
+  document.querySelector("#score").textContent = score;
 }
 
 function resetState() {
@@ -267,13 +260,6 @@ function resetState() {
   inputArray = [];
   charCountInline = 0;
   COLS = 0;
-
-  newGame = {
-    result: false,
-    gameId: "",
-    wordLength: 0,
-    word: "",
-  };
 
   console.log("state reset");
 }
