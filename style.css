@@ -16,7 +16,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #faf8ef;
   color: var(--brun);
@@ -27,7 +26,7 @@ body {
   justify-content: space-around;
   align-items: center;
   width: 100vw;
-  height: 8vh;
+  height: 10vh;
   border: 1px #d3d6da solid;
 }
 
@@ -121,20 +120,18 @@ main {
   display: block;
   text-align: left;
   margin: auto;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; */
-  /* margin: auto; */
 }
 #rules ul {
   list-style: none;
 }
 
 footer {
+  height: 60px;
+  line-height: 60px;
   font-family: "Roboto Slab", serif;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
 }
 
 #repo {
@@ -143,5 +140,5 @@ footer {
 
 a {
   color: var(--brun);
-  text-decoration: none; /* no underline */
+  text-decoration: none;
 }
