@@ -48,31 +48,26 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
   fetch("https://random-word-api.herokuapp.com/word?length=5")
     .then((response) => response.json())
     .then((data) => {
-      // TODO : résoudre ce problème à la racine et retirer cette condition
-      // console.log({ fetched, gameOn });
+      console.log("INIT GAME");
 
-      if (!fetched) {
-        console.log("INIT GAME");
+      const table = document.querySelector("table");
+      if (table) table.remove();
+      document.querySelector("#result").textContent = "";
+      document.querySelector("#result").style.color = "black";
+      mysteryWord = data[0];
 
-        const table = document.querySelector("table");
-        if (table) table.remove();
-        document.querySelector("#result").textContent = "";
-        document.querySelector("#result").style.color = "black";
-        mysteryWord = data[0];
+      // initialisation des données du jeu
+      displayScore();
+      mysteryWord = data[0];
+      COLS = mysteryWord.length;
 
-        // initialisation des données du jeu
-        displayScore();
-        mysteryWord = data[0];
-        COLS = mysteryWord.length;
+      // génération du tableau
+      board = initBoard(ROWS, COLS);
+      displayBoard();
+      generateHTMLTable();
 
-        // génération du tableau
-        board = initBoard(ROWS, COLS);
-        displayBoard();
-        generateHTMLTable();
-
-        fetched = true;
-        gameOn = true;
-      }
+      fetched = true;
+      gameOn = true;
 
       // console.log(data);
       // console.log(newGame);
