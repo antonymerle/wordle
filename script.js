@@ -20,11 +20,19 @@
   TODO : afficher la règle du wordle quand grille absente
 */
 
-let score = 0;
-let board = null;
-let mysteryWord = "";
-let inputArray = [];
-let charCountInline = 0;
+let gameState = {
+  score: 0,
+  board: null,
+  mysteryWord: "",
+  inputArray: [],
+  charCountInline: 0,
+};
+
+// let score = 0;
+// let board = null;
+// let mysteryWord = "";
+// let inputArray = [];
+// let charCountInline = 0;
 const ROWS = 6;
 let COLS = 0;
 
@@ -71,10 +79,10 @@ function initBoard(rows, cols) {
 }
 
 const displayBoard = () => {
-  for (let i = 0; i < board.length; i++) {
+  for (let i = 0; i < gameState.board.length; i++) {
     let row = "";
-    for (let j = 0; j < board[i].length; j++) {
-      row += `[${board[i][j] ? board[i][j] : " "}]`;
+    for (let j = 0; j < gameState.board[i].length; j++) {
+      row += `[${gameState.board[i][j] ? gameState.board[i][j] : " "}]`;
     }
     console.log(row);
   }
@@ -85,11 +93,11 @@ function generateHTMLTable() {
   let table = "";
   table += "<table>";
 
-  for (let i = 0; i < board.length; i++) {
+  for (let i = 0; i < gameState.board.length; i++) {
     table += `<tr class="letter-row" id="tr-${i}">`;
-    for (let j = 0; j < board[i].length; j++) {
+    for (let j = 0; j < gameState.board[i].length; j++) {
       table += `<td class="letter-box" id="td-${
-        board[i].length * i + j
+        gameState.board[i].length * i + j
       }"></td>`;
     }
     table += "</tr>";
@@ -101,7 +109,7 @@ function generateHTMLTable() {
 }
 
 function getKeyboardInput() {
-  const lineLength = board[0].length;
+  const lineLength = gameState.board[0].length;
 
   window.addEventListener("keyup", (e) => {
     // e.preventDefault();
@@ -117,8 +125,8 @@ function getKeyboardInput() {
     }
 
     // game over if board is full
-    if (inputArray.length >= board.length * lineLength) {
-      checkLine(inputArray.length, mysteryWord);
+    if (gameState.inputArray.length >= gameState.board.length * lineLength) {
+      checkLine(gameState.inputArray.length, gameState.mysteryWord);
       document.querySelector("#result").textContent = "GAME OVER";
       document.querySelector("#result").style.color = "var(--brun)";
       console.log("debug");
@@ -133,38 +141,47 @@ function getKeyboardInput() {
 
     // Handle saisie
     const letter = e.key.toUpperCase();
-    if (letter == "BACKSPACE" && !inputArray.length) {
+    if (letter == "BACKSPACE" && !gameState.inputArray.length) {
       // le tableau est vide, impossible de supprimer un caractère
       return;
-    } else if (letter == "BACKSPACE" && inputArray.length > 0) {
+    } else if (letter == "BACKSPACE" && gameState.inputArray.length > 0) {
       // Supprime un caractère
-      document.querySelector(`#td-${inputArray.length - 1}`).textContent = "";
+      document.querySelector(
+        `#td-${gameState.inputArray.length - 1}`
+      ).textContent = "";
       document
-        .querySelector(`#td-${inputArray.length - 1}`)
+        .querySelector(`#td-${gameState.inputArray.length - 1}`)
         .classList.remove("filled-box");
 
-      inputArray.pop();
-      charCountInline--;
-    } else if (letter != "ENTER" && charCountInline < mysteryWord.length) {
+      gameState.inputArray.pop();
+      gameState.charCountInline--;
+    } else if (
+      letter != "ENTER" &&
+      gameState.charCountInline < gameState.mysteryWord.length
+    ) {
       // on n'enregistre l'entrée que si le nombre de lettres ne dépasse pas la limite de la ligne
-      inputArray.push(letter);
-      charCountInline++;
+      gameState.inputArray.push(letter);
+      gameState.charCountInline++;
 
-      document.querySelector(`#td-${inputArray.length - 1}`).textContent =
-        letter;
+      document.querySelector(
+        `#td-${gameState.inputArray.length - 1}`
+      ).textContent = letter;
       document
-        .querySelector(`#td-${inputArray.length - 1}`)
+        .querySelector(`#td-${gameState.inputArray.length - 1}`)
         .classList.add("filled-box");
     }
-    console.log(charCountInline);
+    console.log(gameState.charCountInline);
 
     // Handle validation de la saisie avec entrée
-    if (letter == "ENTER" && inputArray.length % lineLength) {
+    if (letter == "ENTER" && gameState.inputArray.length % lineLength) {
       // entrée mais pas assez de lettres
       document.querySelector("#result").textContent = "Not enough letters !";
-    } else if (inputArray.length % lineLength === 0 && letter == "ENTER") {
-      checkLine(inputArray.length, mysteryWord);
-      charCountInline = 0;
+    } else if (
+      gameState.inputArray.length % lineLength === 0 &&
+      letter == "ENTER"
+    ) {
+      checkLine(gameState.inputArray.length, gameState.mysteryWord);
+      gameState.charCountInline = 0;
     }
   });
 }
@@ -175,22 +192,27 @@ function checkLine(indexOfLastChar, mysteryWord) {
       et on vérifie la ligne en retranchant la length du mot
   */
   // Edge case l'utilisateur appuie sur entrée sans avoir entré de lettres
-  if (inputArray.length === 0) return;
+  if (gameState.inputArray.length === 0) return;
 
   const startIndex = indexOfLastChar - 5;
   let verif = "";
   // vérification de chaque lettre de la ligne par rapport au mot mystère
   // vérification de chaque lettre de la ligne par rapport au mot mystère
   for (let i = startIndex, j = 0; i < indexOfLastChar; i++, j++) {
-    console.log(inputArray);
+    console.log(gameState.inputArray);
     ((ind) => {
       setTimeout(function () {
-        if (inputArray[i].toLowerCase() === mysteryWord[j].toLowerCase()) {
+        if (
+          gameState.inputArray[i].toLowerCase() ===
+          gameState.mysteryWord[j].toLowerCase()
+        ) {
           verif += "x";
           document.querySelector(`#td-${i}`).style.backgroundColor =
             "var(--tileGreen)";
         } else if (
-          mysteryWord.toLowerCase().includes(inputArray[i].toLowerCase())
+          gameState.mysteryWord
+            .toLowerCase()
+            .includes(gameState.inputArray[i].toLowerCase())
         ) {
           verif += "-";
           document.querySelector(`#td-${i}`).style.backgroundColor = "yellow";
@@ -200,12 +222,14 @@ function checkLine(indexOfLastChar, mysteryWord) {
         }
         console.log("indice :" + 300 * ind);
       }, 300 * ind);
-    })(i % mysteryWord.length);
+    })(i % gameState.mysteryWord.length);
   }
-  const lineContent = inputArray.slice(startIndex, indexOfLastChar).join("");
+  const lineContent = gameState.inputArray
+    .slice(startIndex, indexOfLastChar)
+    .join("");
 
   // tests condition victoire
-  if (lineContent.toLowerCase() === mysteryWord.toLowerCase()) {
+  if (lineContent.toLowerCase() === gameState.mysteryWord.toLowerCase()) {
     console.log("debug");
 
     // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
@@ -213,21 +237,21 @@ function checkLine(indexOfLastChar, mysteryWord) {
       document.querySelector("#result").textContent = "YOU WON!";
       document.querySelector("#result").style.color = "var(--tileGreen)";
       document.querySelector("#result").style.textShadow = "1px 1px black";
-      displayScore(++score);
+      displayScore(++gameState.score);
       resetState();
     }, 2000);
   }
 }
 
 function displayScore() {
-  document.querySelector("#score").textContent = score;
+  document.querySelector("#score").textContent = gameState.score;
 }
 
 function resetState() {
-  board = null;
-  mysteryWord = "";
-  inputArray = [];
-  charCountInline = 0;
+  gameState.board = null;
+  gameState.mysteryWord = "";
+  gameState.inputArray = [];
+  gameState.charCountInline = 0;
   COLS = 0;
 
   console.log("state reset");
@@ -240,17 +264,17 @@ function initGame(wordFromApi) {
   if (table) table.remove();
   document.querySelector("#result").textContent = "";
   document.querySelector("#result").style.color = "black";
-  mysteryWord = wordFromApi[0];
+  gameState.mysteryWord = wordFromApi[0];
 
   // initialisation des données du jeu
   displayScore();
 
-  COLS = mysteryWord.length;
+  COLS = gameState.mysteryWord.length;
 
   // génération du tableau
-  board = initBoard(ROWS, COLS);
+  gameState.board = initBoard(ROWS, COLS);
   displayBoard();
   generateHTMLTable();
 
-  console.log(mysteryWord);
+  console.log(gameState.mysteryWord);
 }
