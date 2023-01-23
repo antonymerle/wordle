@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
     <title>Wordle</title>
     <link rel="stylesheet" href="style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap"
       rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
   </head>
 
@@ -19,10 +24,45 @@
         <button type="button" id="newGame">NEW GAME</button>
       </div>
     </div>
+    <main>
+      <div id="rules">
+        <h2>How to play :</h2>
+        <h3>⚡️⚡️ Guess the wordle in 6 tries ! ⚡️⚡️</h3>
+        <ul>
+          <li>🔍️ Each guess must be a valid 5-letter word.</li>
+          <li>
+            ✏️ The color of the tiles will change to show how close your guess
+            was to the word.
+          </li>
+          <li>
+            ✅ If the tile is green, the letter is in the word AND in the
+            correct spot.
+          </li>
+          <li>
+            💡 If the tile is yellow, the letter is in the word but in the wrong
+            spot.
+          </li>
+          <li>🙈 If the tile is grey, the letter is not in the word.</li>
+        </ul>
+      </div>
 
-    <div id="result"></div>
-    <div id="game-board"></div>
+      <div id="result-container">
+        <div id="result"></div>
+        <div id="soluce"></div>
+      </div>
 
+      <div id="game-board"></div>
+    </main>
+    <footer>
+      Antony Merle, <span id="date"></span>
+      <a
+        id="repo"
+        class="fa fa-github"
+        style="font-size: 36px"
+        href="https://github.com/antonymerle/wordle"
+        target="_blank"
+      ></a>
+    </footer>
     <script src="script.js"></script>
   </body>
 </html>
