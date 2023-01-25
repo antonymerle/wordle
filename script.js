@@ -35,19 +35,43 @@ document.querySelector("#newGame").addEventListener("keydown", (e) => {
   }
 });
 
+// document.querySelector("#lang-select").addEventListener("change", (e) => {
+//   changeLang(e.target.value);
+// });
+
 // logic
 
 document.querySelector("#newGame").addEventListener("click", (e) => {
   console.log("*************** FETCH *************");
   // e.preventDefault();
   // e.stopImmediatePropagation();
+
+  const langSelected = document.getElementById("lang-select").value;
+  console.log(langSelected);
+
   resetState();
-  fetch("https://random-word-api.herokuapp.com/word?length=5")
+  fetch(setAPILang(langSelected))
     .then((response) => response.json())
     .then((data) => {
       // itinialisation
       if (data) {
         concealRule();
+      }
+      if (langSelected === "fr") {
+        const randomArrayNumber = Math.floor(Math.random() * data.length);
+        console.log(randomArrayNumber);
+
+        data = data[randomArrayNumber];
+        // normalize accents
+        /*
+        1. normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones. 
+        The è of Crème ends up expressed as e + ̀.
+        2. Using a regex character class to match the U+0300 → U+036F range, it is now trivial to globally get rid of the diacritics, 
+        which the Unicode standard conveniently groups as the Combining Diacritical Marks Unicode block. 
+        */
+        data = data.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        data = [data];
+        console.log(data);
       }
       initGame(data);
 
@@ -291,6 +315,19 @@ function concealRule() {
 
 function printYear() {
   document.querySelector("#date").innerHTML = new Date().getFullYear();
+}
+
+function setAPILang(languageCode) {
+  switch (languageCode) {
+    case "en":
+      return "https://random-word-api.herokuapp.com/word?length=5";
+
+    case "fr":
+      return "./filteredFrenchWord.json";
+
+    default:
+      return "https://random-word-api.herokuapp.com/word?length=5";
+  }
 }
 
 printYear();

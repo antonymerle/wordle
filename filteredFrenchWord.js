@@ -1,4 +1,4 @@
-[
+export const frenchWords = [
   "abbés",
   "aboya",
   "abîme",
@@ -694,5 +694,5 @@
   "évier",
   "évite",
   "ôtant",
-  "ôtons"
-]
+  "ôtons",
+];

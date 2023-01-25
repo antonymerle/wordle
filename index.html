@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+
     <title>Wordle</title>
     <link rel="stylesheet" href="style.css" />
     <link
@@ -18,13 +19,11 @@
     <header id="header">
       <div id="choose-lang">
         <label for="lang-select">Choose a language:</label>
-        <select id="#lang-select">
+        <select id="lang-select">
           class="form-select form-select-lg mb-3" aria-label=".form-select-lg
           example" >
-          <option value="1">English</option>
-          <option value="2">French</option>
-          <option value="3">Spanish</option>
-          <option value="4">German</option>
+          <option value="en">English</option>
+          <option value="fr">French</option>
         </select>
       </div>
       <div class="smallSection">
@@ -74,6 +73,7 @@
         target="_blank"
       ></a>
     </footer>
-    <script src="script.js"></script>
+    <script src="script.js" type="module"></script>
+    <script src="filteredFrenchWord.js" type="module"></script>
   </body>
 </html>
