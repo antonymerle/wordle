@@ -9,6 +9,8 @@
   TODO : responsive design
   TODO : toggle règle/grille
   TODO : choix de la langue
+  TODO : header height minimal
+  TODO : make board responsive so it can be seen on small screens.
 */
 
 // INIT state
@@ -63,6 +65,7 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
       // itinialisation
       if (data) {
         concealRule();
+        concealResults();
       }
       if (gameState.langSelected === "fr") {
         const randomArrayNumber = Math.floor(Math.random() * data.length);
@@ -140,8 +143,8 @@ function getKeyboardInput() {
   window.addEventListener("keyup", (e) => {
     // e.preventDefault();
     e.stopImmediatePropagation(); // nécessaire pour ne pas doubler l'input à chaque nouvelle partie
-    // Discard non letters
     document.querySelector("#result").textContent = "";
+    // Discard non letters
     if (
       !e.key.match(/[a-z]/i) ||
       (e.keyCode < 65 && e.keyCode !== 13 && e.keyCode !== 8) ||
@@ -190,7 +193,7 @@ function getKeyboardInput() {
     // Handle validation de la saisie avec entrée
     if (letter == "ENTER" && gameState.inputArray.length % lineLength) {
       // entrée mais pas assez de lettres
-      document.querySelector("#result").textContent = "Not enough letters !";
+      document.querySelector("#result").textContent = "Not enough letters !"; // TODO remplacer par un setInterval avec un liseré rouge sur la ligne incomplète
     } else if (
       gameState.inputArray.length % lineLength === 0 &&
       letter == "ENTER"
@@ -251,6 +254,7 @@ function checkLine(indexOfLastChar) {
     setTimeout(() => {
       console.log("victoire", gameState.langSelected);
 
+      document.querySelector("#result-container").style.display = "flex";
       document.querySelector("#result").textContent =
         gameState.langSelected === "en" ? "YOU WON!" : "GAGNÉ!";
       document.querySelector("#result").style.color = "var(--tileGreen)";
@@ -324,6 +328,10 @@ function revealSoluce() {
 
 function concealRule() {
   document.querySelector("#rules").style.display = "none";
+}
+
+function concealResults() {
+  document.querySelector("#result-container").style.display = "none";
 }
 
 function printYear() {

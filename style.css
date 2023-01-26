@@ -27,6 +27,7 @@ body {
   align-items: center;
   width: 100vw;
   height: 10vh;
+  min-height: 70px;
   border: 1px #d3d6da solid;
   padding: 0rem 2rem 0rem 2rem;
   color: var(--brun);
@@ -79,25 +80,26 @@ h4 {
 }
 
 #result-container {
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  display: none;
 }
 
 #game-board {
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-top: 25px;
+  /* margin-top: 25px; */
 }
 
 .letter-box {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
-  width: 100px;
+  height: 80px;
+  width: 80px;
   border: 2px solid var(--brun);
   border-radius: 0.5rem;
   margin: 2px;
@@ -125,10 +127,11 @@ h4 {
 }
 
 main {
+  height: 80 vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: flex-start;
 }
 
 #rules {
@@ -142,12 +145,12 @@ main {
 }
 
 footer {
-  height: 60px;
+  height: 10vh;
   line-height: 60px;
   font-family: "Roboto Slab", serif;
   text-align: center;
-  margin-bottom: 1rem;
-  margin-top: 2rem;
+  padding-bottom: 1rem;
+  padding-top: 2rem;
 }
 
 #repo {
