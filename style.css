@@ -28,6 +28,22 @@ body {
   width: 100vw;
   height: 10vh;
   border: 1px #d3d6da solid;
+  padding: 0rem 2rem 0rem 2rem;
+  color: var(--brun);
+}
+
+select {
+  background-color: #fff;
+  color: var(--brun);
+  width: 5vw;
+  height: 30px;
+  border-radius: 3px;
+  font-family: "Roboto Slab", serif;
+  margin-top: 5px;
+  padding: 5px;
+}
+label {
+  font-family: "Roboto Slab", serif;
 }
 
 h4 {
@@ -104,7 +120,7 @@ h4 {
   text-align: center;
   font-family: "Roboto Slab", serif;
   font-size: 42px;
-  text-shadow: 2px 2px black;
+  text-shadow: 2px 2px var(--tileYellow);
   color: black;
 }
 

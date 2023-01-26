@@ -22,6 +22,7 @@ let gameState = {
   mysteryWord: "",
   inputArray: [],
   charCountInline: 0,
+  langSelected: "en",
 };
 
 // Condition pour contrer le fetch intempestif à chaque touche ENTER pressée
@@ -35,9 +36,11 @@ document.querySelector("#newGame").addEventListener("keydown", (e) => {
   }
 });
 
-// document.querySelector("#lang-select").addEventListener("change", (e) => {
-//   changeLang(e.target.value);
-// });
+document.querySelector("#lang-select").addEventListener("change", (e) => {
+  console.log("event : " + e.target.value);
+
+  changeTextLang(e.target.value);
+});
 
 // logic
 
@@ -46,18 +49,18 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
   // e.preventDefault();
   // e.stopImmediatePropagation();
 
-  const langSelected = document.getElementById("lang-select").value;
-  console.log(langSelected);
+  // const langSelected = document.getElementById("lang-select").value;
+  console.log("langue selected : " + gameState.langSelected);
 
   resetState();
-  fetch(setAPILang(langSelected))
+  fetch(setAPILang(gameState.langSelected))
     .then((response) => response.json())
     .then((data) => {
       // itinialisation
       if (data) {
         concealRule();
       }
-      if (langSelected === "fr") {
+      if (gameState.langSelected === "fr") {
         const randomArrayNumber = Math.floor(Math.random() * data.length);
         console.log(randomArrayNumber);
 
@@ -71,6 +74,7 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
         */
         data = data.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         data = [data];
+
         console.log(data);
       }
       initGame(data);
@@ -139,6 +143,7 @@ function getKeyboardInput() {
       (e.keyCode < 65 && e.keyCode !== 13 && e.keyCode !== 8) ||
       (e.keyCode > 122 && e.keyCode !== 13 && e.keyCode !== 8)
     ) {
+      console.log(e.keyCode);
       return;
     }
 
@@ -240,7 +245,8 @@ function checkLine(indexOfLastChar, mysteryWord) {
 
     // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
     setTimeout(() => {
-      document.querySelector("#result").textContent = "YOU WON!";
+      document.querySelector("#result").textContent =
+        gameState.langSelected === "en" ? "YOU WON!" : "GAGNÉ!";
       document.querySelector("#result").style.color = "var(--tileGreen)";
       document.querySelector("#result").style.textShadow = "1px 1px black";
       displayScore(++gameState.score);
@@ -330,4 +336,65 @@ function setAPILang(languageCode) {
   }
 }
 
+function changeTextLang(languageCode) {
+  console.log("arg " + languageCode);
+
+  if (languageCode === "fr") {
+    console.log("change langue français");
+
+    document.querySelector("#rules").innerHTML = frRules;
+    document.querySelector("label").textContent = "Choisissez votre langue:";
+    document.querySelector("#newGame").textContent = "NOUVELLE PARTIE";
+  } else {
+    console.log("change langue anglais");
+
+    document.querySelector("#rules").innerHTML = enRules;
+    document.querySelector("label").textContent = "Choose a language:";
+    document.querySelector("#newGame").textContent = "NEW GAME";
+  }
+}
+
+const enRules = `
+
+        <h2>How to play :</h2>
+        <h3>⚡️⚡️ Guess the wordle in 6 tries ! ⚡️⚡️</h3>
+        <ul>
+          <li>🔍️  Each guess must be a valid 5-letter word.</li>
+          <li>
+            ✏️  The color of the tiles will change to show how close your guess
+            was to the word.
+          </li>
+          <li>
+            ✅  If the tile is green, the letter is in the word AND in the
+            correct spot.
+          </li>
+          <li>
+            💡  If the tile is yellow, the letter is in the word but in the wrong
+            spot.
+          </li>
+          <li>🙈  If the tile is grey, the letter is not in the word.</li>
+        </ul>
+
+`;
+
+const frRules = `
+
+        <h2>Comment jouer :</h2>
+        <h3>⚡️⚡️ Devinez le wordle en 6 coups ! ⚡️⚡️</h3>
+        <ul>
+          <li>🔍️  Chaque tentative doit être un mot valide de 5 lettres, sans accents.</li>
+          <li>
+            ✏️  La couleur des cases changera en fonction de votre résultat.
+          </li>
+          <li>
+            ✅  Si la case est verte, la lettre se trouve au bon endroit dans le mot à deviner.
+          </li>
+          <li>
+            💡  Si la case est jaune, la lettre est dans le mot mais au mauvais endroit.
+          </li>
+          <li>🙈  Si la case est grise, la lettre n'est pas dans le mot.</li>
+        </ul>
+
+`;
+changeTextLang(gameState.langSelected);
 printYear();
