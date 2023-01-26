@@ -11,6 +11,10 @@
   TODO : choix de la langue
   TODO : header height minimal
   TODO : make board responsive so it can be seen on small screens.
+  TODO : factorize
+  TODO : modularize html in js
+  TODO : center h1
+  TODO : handle not enough letters with css
 */
 
 // INIT state
