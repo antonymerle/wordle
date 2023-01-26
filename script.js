@@ -191,13 +191,13 @@ function getKeyboardInput() {
       gameState.inputArray.length % lineLength === 0 &&
       letter == "ENTER"
     ) {
-      checkLine(gameState.inputArray.length, gameState.mysteryWord);
+      checkLine(gameState.inputArray.length);
       gameState.charCountInline = 0;
     }
   });
 }
 
-function checkLine(indexOfLastChar, mysteryWord) {
+function checkLine(indexOfLastChar) {
   /*  on prend l'index absolu de la dernière lettre entrée,
       partant du principe qu'elle se situe toujours à la fin d'un ligne
       et on vérifie la ligne en retranchant la length du mot
@@ -294,7 +294,7 @@ function initGame(wordFromApi) {
 
 function checkDefeat(lineLength) {
   if (gameState.inputArray.length >= gameState.board.length * lineLength) {
-    checkLine(gameState.inputArray.length, gameState.mysteryWord);
+    checkLine(gameState.inputArray.length);
     document.querySelector("#result").textContent = "GAME OVER";
     document.querySelector("#result").style.color = "var(--brun)";
 
