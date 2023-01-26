@@ -11,10 +11,13 @@
   TODO : choix de la langue
 */
 
-// game state, variables et constantes
+// INIT state
 
 const ROWS = 6;
 let COLS = 0;
+
+const select = document.querySelector("#lang-select");
+select.selectedIndex = 0;
 
 let gameState = {
   score: 0,
@@ -36,10 +39,11 @@ document.querySelector("#newGame").addEventListener("keydown", (e) => {
   }
 });
 
-document.querySelector("#lang-select").addEventListener("change", (e) => {
+select.addEventListener("change", (e) => {
   console.log("event : " + e.target.value);
 
-  changeTextLang(e.target.value);
+  gameState.langSelected = e.target.value;
+  changeTextLang(gameState.langSelected);
 });
 
 // logic
@@ -245,6 +249,8 @@ function checkLine(indexOfLastChar) {
 
     // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
     setTimeout(() => {
+      console.log("victoire", gameState.langSelected);
+
       document.querySelector("#result").textContent =
         gameState.langSelected === "en" ? "YOU WON!" : "GAGNÉ!";
       document.querySelector("#result").style.color = "var(--tileGreen)";
@@ -295,7 +301,8 @@ function initGame(wordFromApi) {
 function checkDefeat(lineLength) {
   if (gameState.inputArray.length >= gameState.board.length * lineLength) {
     checkLine(gameState.inputArray.length);
-    document.querySelector("#result").textContent = "GAME OVER";
+    document.querySelector("#result").textContent =
+      gameState.langSelected === "en" ? "GAME OVER" : "PERDU";
     document.querySelector("#result").style.color = "var(--brun)";
 
     revealSoluce();
@@ -396,5 +403,6 @@ const frRules = `
         </ul>
 
 `;
+
 changeTextLang(gameState.langSelected);
 printYear();
