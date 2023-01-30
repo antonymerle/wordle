@@ -17,6 +17,8 @@
   TODO : handle not enough letters with css
 */
 
+import { enRules, frRules } from "./rules.js";
+
 // INIT state
 
 const ROWS = 6;
@@ -27,7 +29,7 @@ select.selectedIndex = 0;
 
 let gameState = {
   score: 0,
-  board: null,
+  board: null, // array[6][5]<null>
   mysteryWord: "",
   inputArray: [],
   charCountInline: 0,
@@ -52,12 +54,9 @@ select.addEventListener("change", (e) => {
   changeTextLang(gameState.langSelected);
 });
 
-// logic
-
-document.querySelector("#newGame").addEventListener("click", (e) => {
+// game logic
+document.querySelector("#newGame").addEventListener("click", () => {
   console.log("*************** FETCH *************");
-  // e.preventDefault();
-  // e.stopImmediatePropagation();
 
   // const langSelected = document.getElementById("lang-select").value;
   console.log("langue selected : " + gameState.langSelected);
@@ -65,12 +64,17 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
   resetState();
   fetch(setAPILang(gameState.langSelected))
     .then((response) => response.json())
-    .then((data) => {
+    .then((wordFromApi) => {
       // itinialisation
-      if (data) {
+      if (wordFromApi) {
+        gameState.mysteryWord = wordFromApi[0];
+        console.log(gameState.mysteryWord);
+
         concealRule();
         concealResults();
       }
+
+      // TODO : do not fetch if fr + replace data (undefined)
       if (gameState.langSelected === "fr") {
         const randomArrayNumber = Math.floor(Math.random() * data.length);
         console.log(randomArrayNumber);
@@ -88,7 +92,8 @@ document.querySelector("#newGame").addEventListener("click", (e) => {
 
         console.log(data);
       }
-      initGame(data);
+
+      initGame();
 
       // prise en charge input
       console.log("prise en charge input");
@@ -142,10 +147,16 @@ function generateHTMLTable() {
 }
 
 function getKeyboardInput() {
+  try {
+    gameState.board[0].length === gameState.mysteryWord.length;
+  } catch (error) {
+    console.error(
+      "Something went wrong : line lenght does not match mystery word length"
+    );
+  }
   const lineLength = gameState.board[0].length;
 
   window.addEventListener("keyup", (e) => {
-    // e.preventDefault();
     e.stopImmediatePropagation(); // nécessaire pour ne pas doubler l'input à chaque nouvelle partie
     document.querySelector("#result").textContent = "";
     // Discard non letters
@@ -163,11 +174,15 @@ function getKeyboardInput() {
 
     // Handle saisie
     const letter = e.key.toUpperCase();
+
+    // le tableau est vide, impossible de supprimer un caractère
     if (letter == "BACKSPACE" && !gameState.inputArray.length) {
-      // le tableau est vide, impossible de supprimer un caractère
       return;
-    } else if (letter == "BACKSPACE" && gameState.inputArray.length > 0) {
-      // Supprime un caractère
+    }
+    // On veut supprimer un caractère
+    // TODO : bug on peut supprimer les caractères de la ligne précédente alors qu'on ne devrait
+    // pouvoir supprimer que les caractères de la ligne courante
+    else if (letter == "BACKSPACE" && gameState.inputArray.length > 0) {
       document.querySelector(
         `#td-${gameState.inputArray.length - 1}`
       ).textContent = "";
@@ -177,11 +192,13 @@ function getKeyboardInput() {
 
       gameState.inputArray.pop();
       gameState.charCountInline--;
-    } else if (
+      console.log("chars in line : ", gameState.charCountInline);
+    }
+    // on n'enregistre l'entrée que si le nombre de lettres ne dépasse pas la limite de la ligne
+    else if (
       letter != "ENTER" &&
       gameState.charCountInline < gameState.mysteryWord.length
     ) {
-      // on n'enregistre l'entrée que si le nombre de lettres ne dépasse pas la limite de la ligne
       gameState.inputArray.push(letter);
       gameState.charCountInline++;
 
@@ -191,19 +208,21 @@ function getKeyboardInput() {
       document
         .querySelector(`#td-${gameState.inputArray.length - 1}`)
         .classList.add("filled-box");
+      console.log("chars in line : ", gameState.charCountInline);
     }
-    console.log(gameState.charCountInline);
 
     // Handle validation de la saisie avec entrée
-    if (letter == "ENTER" && gameState.inputArray.length % lineLength) {
+    else if (letter == "ENTER" && gameState.inputArray.length % lineLength) {
       // entrée mais pas assez de lettres
       document.querySelector("#result").textContent = "Not enough letters !"; // TODO remplacer par un setInterval avec un liseré rouge sur la ligne incomplète
+      console.log("Not enough letters !");
     } else if (
       gameState.inputArray.length % lineLength === 0 &&
       letter == "ENTER"
     ) {
       checkLine(gameState.inputArray.length);
-      gameState.charCountInline = 0;
+      gameState.charCountInline = 0; // TODO : pourquoi reset (cf conditions défaite)
+      console.log("chars in line : ", gameState.charCountInline);
     }
   });
 }
@@ -218,7 +237,6 @@ function checkLine(indexOfLastChar) {
 
   const startIndex = indexOfLastChar - 5;
   let verif = "";
-  // vérification de chaque lettre de la ligne par rapport au mot mystère
   // vérification de chaque lettre de la ligne par rapport au mot mystère
   for (let i = startIndex, j = 0; i < indexOfLastChar; i++, j++) {
     console.log(gameState.inputArray);
@@ -283,27 +301,21 @@ function resetState() {
   console.log("state reset");
 }
 
-function initGame(wordFromApi) {
-  // expects an array of 1 string
+function initGame() {
   console.log("INIT GAME");
+
   const table = document.querySelector("table");
   if (table) table.remove();
   document.querySelector("#result").textContent = "";
   document.querySelector("#soluce").textContent = "";
   document.querySelector("#result").style.color = "black";
-  gameState.mysteryWord = wordFromApi[0];
-
-  // initialisation des données du jeu
-  displayScore();
 
   COLS = gameState.mysteryWord.length;
 
-  // génération du tableau
+  // generate HTML board from data structure
   gameState.board = initBoard(ROWS, COLS);
   displayBoard();
   generateHTMLTable();
-
-  console.log(gameState.mysteryWord);
 }
 
 function checkDefeat(lineLength) {
@@ -373,48 +385,6 @@ function changeTextLang(languageCode) {
   }
 }
 
-const enRules = `
-
-        <h2>How to play :</h2>
-        <h3>⚡️⚡️ Guess the wordle in 6 tries ! ⚡️⚡️</h3>
-        <ul>
-          <li>🔍️  Each guess must be a valid 5-letter word.</li>
-          <li>
-            ✏️  The color of the tiles will change to show how close your guess
-            was to the word.
-          </li>
-          <li>
-            ✅  If the tile is green, the letter is in the word AND in the
-            correct spot.
-          </li>
-          <li>
-            💡  If the tile is yellow, the letter is in the word but in the wrong
-            spot.
-          </li>
-          <li>🙈  If the tile is grey, the letter is not in the word.</li>
-        </ul>
-
-`;
-
-const frRules = `
-
-        <h2>Comment jouer :</h2>
-        <h3>⚡️⚡️ Devinez le wordle en 6 coups ! ⚡️⚡️</h3>
-        <ul>
-          <li>🔍️  Chaque tentative doit être un mot valide de 5 lettres, sans accents.</li>
-          <li>
-            ✏️  La couleur des cases changera en fonction de votre résultat.
-          </li>
-          <li>
-            ✅  Si la case est verte, la lettre se trouve au bon endroit dans le mot à deviner.
-          </li>
-          <li>
-            💡  Si la case est jaune, la lettre est dans le mot mais au mauvais endroit.
-          </li>
-          <li>🙈  Si la case est grise, la lettre n'est pas dans le mot.</li>
-        </ul>
-
-`;
-
+displayScore();
 changeTextLang(gameState.langSelected);
 printYear();
