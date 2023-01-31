@@ -6,16 +6,17 @@
   DONE : résoudre le fetch intempestif
   DONE : afficher la règle du wordle quand grille absente
   DONE : newGame en cours de partie ne réinitialise pas arrayInput
+  DONE : expected behaviour : cannot validate line if 0 chars
+  DONE : modularize html in js
   TODO : responsive design
   TODO : toggle règle/grille
   TODO : choix de la langue
   TODO : header height minimal
   TODO : make board responsive so it can be seen on small screens.
   TODO : factorize
-  DONE : modularize html in js
   TODO : center h1
   TODO : handle not enough letters with css
-  DONE : expected behaviour : cannot validate line if 0 chars
+  DONE : backspace must be discarded as a displayed character
 */
 
 import { enRules, frRules } from "./rules.js";
@@ -196,6 +197,7 @@ function getKeyboardInput() {
     // on n'enregistre l'entrée que si le nombre de lettres ne dépasse pas la limite de la ligne
     else if (
       letter != "ENTER" &&
+      letter != "BACKSPACE" &&
       gameState.charCountInline < gameState.mysteryWord.length
     ) {
       gameState.inputArray.push(letter);
