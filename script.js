@@ -11,6 +11,7 @@
   DONE : backspace must be discarded as a displayed character
   DONE : choix de la langue
   DONE : remplacer par un setInterval avec un liseré rouge sur les cases restantes de la ligne incomplète
+  DONE : fix bug defeat div hidden
   TODO : responsive design
   TODO : toggle règle/grille
   TODO : header height minimal
@@ -173,7 +174,7 @@ function getKeyboardInput() {
     }
 
     // game over if board is full
-    checkDefeat(lineLength);
+    if (gameState.inputArray.length >= ROWS * COLS) triggerDefeat();
 
     // Handle saisie
     const letter = e.key.toUpperCase();
@@ -344,23 +345,25 @@ function initGame() {
   generateHTMLTable();
 }
 
-function checkDefeat(lineLength) {
-  if (gameState.inputArray.length >= gameState.board.length * lineLength) {
-    checkLine(gameState.inputArray.length);
-    document.querySelector("#result").textContent =
-      gameState.langSelected === "en" ? "GAME OVER" : "PERDU";
-    document.querySelector("#result").style.color = "var(--brun)";
+function triggerDefeat() {
+  console.log("trigger defeat");
 
+  // if (gameState.inputArray.length >= gameState.board.length * lineLength) {
+  checkLine(gameState.inputArray.length);
+  document.querySelector("#result").textContent =
+    gameState.langSelected === "en" ? "GAME OVER" : "PERDU";
+  document.querySelector("#result").style.color = "var(--brun)";
+
+  // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
+  setTimeout(() => {
+    revealResults();
     revealSoluce();
+    resetState();
+  }, 2000);
 
-    // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
-    setTimeout(() => {
-      resetState();
-    }, 2000);
-
-    console.log("return défaite");
-  }
+  console.log("return défaite");
 }
+// }
 
 function revealSoluce() {
   document.querySelector("#soluce").textContent =
@@ -374,6 +377,10 @@ function concealRule() {
 
 function concealResults() {
   document.querySelector("#result-container").style.display = "none";
+}
+
+function revealResults() {
+  document.querySelector("#result-container").style.display = "block";
 }
 
 function printYear() {
