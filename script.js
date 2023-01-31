@@ -8,15 +8,16 @@
   DONE : newGame en cours de partie ne réinitialise pas arrayInput
   DONE : expected behaviour : cannot validate line if 0 chars
   DONE : modularize html in js
+  DONE : backspace must be discarded as a displayed character
+  DONE : choix de la langue
+  DONE : remplacer par un setInterval avec un liseré rouge sur les cases restantes de la ligne incomplète
   TODO : responsive design
   TODO : toggle règle/grille
-  TODO : choix de la langue
   TODO : header height minimal
   TODO : make board responsive so it can be seen on small screens.
   TODO : factorize
   TODO : center h1
   TODO : handle not enough letters with css
-  DONE : backspace must be discarded as a displayed character
 */
 
 import { enRules, frRules } from "./rules.js";
@@ -209,6 +210,9 @@ function getKeyboardInput() {
       document
         .querySelector(`#td-${gameState.inputArray.length - 1}`)
         .classList.add("filled-box");
+      document
+        .querySelector(`#td-${gameState.inputArray.length - 1}`)
+        .classList.remove("missing-letter");
       console.log("chars in line : ", gameState.charCountInline);
     }
 
@@ -220,15 +224,31 @@ function getKeyboardInput() {
       (gameState.inputArray.length % lineLength !== 0 ||
         gameState.charCountInline === 0)
     ) {
-      document.querySelector("#result").textContent = "Not enough letters !"; // TODO remplacer par un setInterval avec un liseré rouge sur la ligne incomplète
-      console.log("Not enough letters !");
+      document.querySelector("#result").textContent = "Not enough letters !";
+
+      // CSS animation shenanigans
+      const missingLettersNumber = COLS - (gameState.inputArray.length % COLS);
+      console.log(`Not enough letters ! Need ${missingLettersNumber} more !`);
+
+      for (let i = 0; i < missingLettersNumber; i++) {
+        document
+          .querySelector(`#td-${gameState.inputArray.length + i}`)
+          .classList.add("missing-letter");
+      }
+      setTimeout(() => {
+        for (let i = 0; i < missingLettersNumber; i++) {
+          document
+            .querySelector(`#td-${gameState.inputArray.length + i}`)
+            .classList.remove("missing-letter");
+        }
+      }, 2000);
     } else if (
       gameState.inputArray.length % lineLength === 0 &&
       letter == "ENTER"
     ) {
       checkLine(gameState.inputArray.length);
-      gameState.charCountInline = 0; // TODO : pourquoi reset (cf conditions défaite)
-      console.log("chars in line : ", gameState.charCountInline);
+      gameState.charCountInline = 0;
+      console.log("reset chars in line : ", gameState.charCountInline);
     }
   });
 }
