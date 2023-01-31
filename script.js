@@ -182,7 +182,7 @@ function getKeyboardInput() {
     // On veut supprimer un caractère
     // TODO : bug on peut supprimer les caractères de la ligne précédente alors qu'on ne devrait
     // pouvoir supprimer que les caractères de la ligne courante
-    else if (letter == "BACKSPACE" && gameState.inputArray.length > 0) {
+    else if (letter == "BACKSPACE" && gameState.charCountInline > 0) {
       document.querySelector(
         `#td-${gameState.inputArray.length - 1}`
       ).textContent = "";
