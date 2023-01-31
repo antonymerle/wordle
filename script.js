@@ -12,9 +12,10 @@
   TODO : header height minimal
   TODO : make board responsive so it can be seen on small screens.
   TODO : factorize
-  TODO : modularize html in js
+  DONE : modularize html in js
   TODO : center h1
   TODO : handle not enough letters with css
+  DONE : expected behaviour : cannot validate line if 0 chars
 */
 
 import { enRules, frRules } from "./rules.js";
@@ -165,7 +166,7 @@ function getKeyboardInput() {
       (e.keyCode < 65 && e.keyCode !== 13 && e.keyCode !== 8) ||
       (e.keyCode > 122 && e.keyCode !== 13 && e.keyCode !== 8)
     ) {
-      console.log(e.keyCode);
+      console.log("discarded keycode : ", e.keyCode);
       return;
     }
 
@@ -180,8 +181,6 @@ function getKeyboardInput() {
       return;
     }
     // On veut supprimer un caractère
-    // TODO : bug on peut supprimer les caractères de la ligne précédente alors qu'on ne devrait
-    // pouvoir supprimer que les caractères de la ligne courante
     else if (letter == "BACKSPACE" && gameState.charCountInline > 0) {
       document.querySelector(
         `#td-${gameState.inputArray.length - 1}`
@@ -211,9 +210,14 @@ function getKeyboardInput() {
       console.log("chars in line : ", gameState.charCountInline);
     }
 
-    // Handle validation de la saisie avec entrée
-    else if (letter == "ENTER" && gameState.inputArray.length % lineLength) {
-      // entrée mais pas assez de lettres
+    // Handle line validation with ENTER key
+
+    // not enough chars in line
+    else if (
+      letter == "ENTER" &&
+      (gameState.inputArray.length % lineLength !== 0 ||
+        gameState.charCountInline === 0)
+    ) {
       document.querySelector("#result").textContent = "Not enough letters !"; // TODO remplacer par un setInterval avec un liseré rouge sur la ligne incomplète
       console.log("Not enough letters !");
     } else if (
