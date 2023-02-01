@@ -237,4 +237,10 @@ a {
     position: sticky;
     display: none;
   }
+
+  #rules {
+    font-size: small;
+    overflow-wrap: break-word;
+    padding: 1rem;
+  }
 }
