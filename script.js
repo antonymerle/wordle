@@ -12,8 +12,7 @@
   DONE : choix de la langue
   DONE : remplacer par un setInterval avec un liseré rouge sur les cases restantes de la ligne incomplète
   DONE : fix bug defeat div hidden
-  TODO : responsive design
-  TODO : toggle règle/grille
+  DONE : responsive design
   TODO : header height minimal
   TODO : make board responsive so it can be seen on small screens.
   TODO : factorize
@@ -33,7 +32,7 @@ select.selectedIndex = 0;
 
 let gameState = {
   score: 0,
-  board: null, // array[6][5]<null>
+  board: null, // array<null>[6][5]
   mysteryWord: "",
   inputArray: [],
   charCountInline: 0,
