@@ -13,11 +13,12 @@
   DONE : remplacer par un setInterval avec un liseré rouge sur les cases restantes de la ligne incomplète
   DONE : fix bug defeat div hidden
   DONE : responsive design
-  TODO : header height minimal
-  TODO : make board responsive so it can be seen on small screens.
+  DONE : make board responsive so it can be seen on small screens.
+  DONE : header height minimal
+  DONE : center h1
+  DONE : handle not enough letters with css
   TODO : factorize
-  TODO : center h1
-  TODO : handle not enough letters with css
+  TODO : clean code
 */
 
 import { enRules, frRules } from "./rules.js";
