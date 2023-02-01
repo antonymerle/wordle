@@ -21,9 +21,10 @@ body {
   color: var(--brun);
 }
 
-#header {
+header {
   display: flex;
-  justify-content: space-around;
+  position: relative;
+  justify-content: space-between;
   align-items: center;
   width: 100vw;
   height: 10vh;
@@ -33,10 +34,16 @@ body {
   color: var(--brun);
 }
 
+#choose-lang {
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
 select {
   background-color: #fff;
   color: var(--brun);
-  width: 5vw;
+  width: 80px;
   height: 30px;
   border-radius: 3px;
   font-family: "Roboto Slab", serif;
@@ -45,17 +52,23 @@ select {
 }
 label {
   font-family: "Roboto Slab", serif;
+  font-size: small;
 }
 
 h4 {
   font-family: "Roboto Slab", serif;
+  display: block;
+  position: absolute;
+  left: 18rem;
 }
 
-#title {
+h1 {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
   font-family: "Roboto Slab", serif;
   text-align: center;
   font-size: 50px;
-  width: 50%;
   text-shadow: 3px 3px var(--tileYellow);
   color: black;
 }
@@ -67,6 +80,7 @@ h4 {
 }
 
 #newGame {
+  z-index: 2;
   width: 200px;
   height: 40px;
   border: 1px #000 solid;
@@ -194,4 +208,32 @@ footer {
 a {
   color: var(--brun);
   text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  #choose-lang {
+    display: none;
+    width: 0px;
+  }
+  header {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    padding: 1rem;
+  }
+  h1 {
+    position: sticky;
+    width: auto;
+  }
+  #newGame {
+    z-index: 2;
+    width: 100px;
+    height: 40px;
+    font-weight: 500;
+  }
+
+  h4 {
+    position: sticky;
+    display: none;
+  }
 }
