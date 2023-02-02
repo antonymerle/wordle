@@ -294,19 +294,14 @@ function checkLine(indexOfLastChar) {
 
   // tests condition victoire
   if (lineContent.toLowerCase() === gameState.mysteryWord.toLowerCase()) {
-    console.log("debug");
-
     // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
     setTimeout(() => {
-      console.log("victoire", gameState.langSelected);
-
       document.querySelector("#result-container").style.display = "flex";
       document.querySelector("#result").textContent =
         gameState.langSelected === "en" ? "YOU WON!" : "GAGNÉ!";
       document.querySelector("#result").style.color = "var(--tileGreen)";
       document.querySelector("#result").style.textShadow = "1px 1px black";
       displayScore(++gameState.score);
-      resetState();
     }, 2000);
   }
 }
@@ -327,7 +322,6 @@ function resetState() {
 
 function initGame() {
   console.log("INIT GAME");
-
   const table = document.querySelector("table");
   if (table) table.remove();
   document.querySelector("#result").textContent = "";
@@ -344,8 +338,6 @@ function initGame() {
 
 function triggerDefeat() {
   console.log("trigger defeat");
-
-  // if (gameState.inputArray.length >= gameState.board.length * lineLength) {
   checkLine(gameState.inputArray.length);
   document.querySelector("#result").textContent =
     gameState.langSelected === "en" ? "GAME OVER" : "PERDU";
