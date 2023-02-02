@@ -159,7 +159,7 @@ function getKeyboardInput() {
 
   window.addEventListener("keyup", (e) => {
     e.stopImmediatePropagation(); // nécessaire pour ne pas doubler l'input à chaque nouvelle partie
-    document.querySelector("#result").textContent = "";
+
     // Discard non letters
     if (
       !e.key.match(/[a-z]/i) ||
@@ -355,16 +355,18 @@ function triggerDefeat() {
   setTimeout(() => {
     revealResults();
     revealSoluce();
-    resetState();
   }, 2000);
 
   console.log("return défaite");
 }
-// }
 
 function revealSoluce() {
+  console.log(gameState.langSelected);
+
+  const soluceTraduction =
+    gameState.langSelected === "en" ? "Mystery word : " : "Solution : ";
   document.querySelector("#soluce").textContent =
-    "Soluce : " + gameState.mysteryWord;
+    soluceTraduction + gameState.mysteryWord;
   document.querySelector("#soluce").style.color = "var(--brun)";
 }
 
