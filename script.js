@@ -19,6 +19,7 @@
   DONE : handle not enough letters with css
   TODO : factorize
   TODO : clean code
+  TODO : favicon
 */
 
 import { enRules, frRules } from "./rules.js";
@@ -68,41 +69,37 @@ document.querySelector("#newGame").addEventListener("click", () => {
   resetState();
   fetch(setAPILang(gameState.langSelected))
     .then((response) => response.json())
-    .then((wordFromApi) => {
+    .then((data) => {
       // itinialisation
-      if (wordFromApi) {
-        gameState.mysteryWord = wordFromApi[0];
-        console.log(gameState.mysteryWord);
-
-        concealRule();
-        concealResults();
+      if (data) {
+        if (gameState.langSelected === "en") {
+          // API returns a single word in an array
+          gameState.mysteryWord = data[0];
+        } else if (gameState.langSelected === "fr") {
+          // Returns a word array
+          const randomArrayIndex = Math.floor(Math.random() * data.length);
+          const frenchWord = data[randomArrayIndex];
+          // normalize accents
+          /*
+          1. normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones. 
+          The è of Crème ends up expressed as e + ̀.
+          2. Using a regex character class to match the U+0300 → U+036F range, it is now trivial to globally get rid of the diacritics, 
+          which the Unicode standard conveniently groups as the Combining Diacritical Marks Unicode block. 
+          */
+          gameState.mysteryWord = frenchWord
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+        }
       }
 
-      // TODO : do not fetch if fr + replace data (undefined)
-      if (gameState.langSelected === "fr") {
-        const randomArrayNumber = Math.floor(Math.random() * data.length);
-        console.log(randomArrayNumber);
+      console.log(gameState.mysteryWord);
 
-        data = data[randomArrayNumber];
-        // normalize accents
-        /*
-        1. normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones. 
-        The è of Crème ends up expressed as e + ̀.
-        2. Using a regex character class to match the U+0300 → U+036F range, it is now trivial to globally get rid of the diacritics, 
-        which the Unicode standard conveniently groups as the Combining Diacritical Marks Unicode block. 
-        */
-        data = data.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        data = [data];
-
-        console.log(data);
-      }
-
+      concealRule();
+      concealResults();
       initGame();
-
-      // prise en charge input
-      console.log("prise en charge input");
       getKeyboardInput();
-    });
+    })
+    .catch((error) => console.log({ error }));
 });
 
 function initBoard(rows, cols) {
