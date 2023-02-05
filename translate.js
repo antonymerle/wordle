@@ -37,3 +37,36 @@ export const frRules = `
         </ul>
 
 `;
+
+export function translate(languageCode) {
+  console.log("arg " + languageCode);
+
+  if (languageCode === "fr") {
+    document.querySelector("html").lang = "fr";
+    console.log("change langue français");
+
+    document.querySelector("#rules").innerHTML = frRules;
+    document.querySelector("label").textContent = "Choisissez votre langue:";
+    document.querySelector("#newGame").textContent = "NOUVELLE PARTIE";
+  } else {
+    console.log("change langue anglais");
+
+    document.querySelector("html").lang = "en";
+    document.querySelector("#rules").innerHTML = enRules;
+    document.querySelector("label").textContent = "Choose a language:";
+    document.querySelector("#newGame").textContent = "NEW GAME";
+  }
+}
+
+export function setAPILang(languageCode) {
+  switch (languageCode) {
+    case "en":
+      return "https://random-word-api.herokuapp.com/word?length=5";
+
+    case "fr":
+      return "./filteredFrenchWord.json";
+
+    default:
+      return "https://random-word-api.herokuapp.com/word?length=5";
+  }
+}

@@ -22,7 +22,7 @@
   TODO : clean code
 */
 
-import { enRules, frRules } from "./rules.js";
+import { translate, setAPILang } from "./translate.js";
 
 // INIT state
 
@@ -56,7 +56,7 @@ select.addEventListener("change", (e) => {
   console.log("event : " + e.target.value);
 
   gameState.langSelected = e.target.value;
-  changeTextLang(gameState.langSelected);
+  translate(gameState.langSelected);
 });
 
 // game logic
@@ -378,39 +378,6 @@ function printYear() {
   document.querySelector("#date").innerHTML = new Date().getFullYear();
 }
 
-function setAPILang(languageCode) {
-  switch (languageCode) {
-    case "en":
-      return "https://random-word-api.herokuapp.com/word?length=5";
-
-    case "fr":
-      return "./filteredFrenchWord.json";
-
-    default:
-      return "https://random-word-api.herokuapp.com/word?length=5";
-  }
-}
-
-function changeTextLang(languageCode) {
-  console.log("arg " + languageCode);
-
-  if (languageCode === "fr") {
-    document.querySelector("html").lang = "fr";
-    console.log("change langue français");
-
-    document.querySelector("#rules").innerHTML = frRules;
-    document.querySelector("label").textContent = "Choisissez votre langue:";
-    document.querySelector("#newGame").textContent = "NOUVELLE PARTIE";
-  } else {
-    console.log("change langue anglais");
-
-    document.querySelector("html").lang = "en";
-    document.querySelector("#rules").innerHTML = enRules;
-    document.querySelector("label").textContent = "Choose a language:";
-    document.querySelector("#newGame").textContent = "NEW GAME";
-  }
-}
-
 displayScore();
-changeTextLang(gameState.langSelected);
+translate(gameState.langSelected);
 printYear();
