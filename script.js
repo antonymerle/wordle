@@ -17,9 +17,9 @@
   DONE : header height minimal
   DONE : center h1
   DONE : handle not enough letters with css
+  DONE : favicon
   TODO : factorize
   TODO : clean code
-  TODO : favicon
 */
 
 import { enRules, frRules } from "./rules.js";
@@ -395,6 +395,7 @@ function changeTextLang(languageCode) {
   console.log("arg " + languageCode);
 
   if (languageCode === "fr") {
+    document.querySelector("html").lang = "fr";
     console.log("change langue français");
 
     document.querySelector("#rules").innerHTML = frRules;
@@ -403,6 +404,7 @@ function changeTextLang(languageCode) {
   } else {
     console.log("change langue anglais");
 
+    document.querySelector("html").lang = "en";
     document.querySelector("#rules").innerHTML = enRules;
     document.querySelector("label").textContent = "Choose a language:";
     document.querySelector("#newGame").textContent = "NEW GAME";
