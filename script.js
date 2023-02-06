@@ -292,21 +292,13 @@ function checkLine(indexOfLastChar) {
 
   // tests win/lose
   if (lineContent.toLowerCase() === gameState.mysteryWord.toLowerCase()) {
-    // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
-    setTimeout(() => {
-      document.querySelector("#result-container").style.display = "flex";
-      document.querySelector("#result").textContent =
-        gameState.langSelected === "en" ? "YOU WON!" : "GAGNÉ!";
-      document.querySelector("#result").style.color = "var(--tileGreen)";
-      document.querySelector("#result").style.textShadow = "1px 1px black";
-      displayScore(++gameState.score);
-    }, 2000);
+    triggerVictory();
   } else if (
     // game over if board is full
     gameState.inputArray.length >= ROWS * COLS &&
     lineContent.toLowerCase() !== gameState.mysteryWord.toLowerCase()
   ) {
-    triggerDefeat(); // TODO: erreur display soluce => à mettre dans checkLine() ?
+    triggerDefeat();
   }
 }
 
@@ -338,6 +330,18 @@ function initGame() {
   gameState.board = initBoard(ROWS, COLS);
   displayBoard();
   generateHTMLTable();
+}
+
+function triggerVictory() {
+  // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
+  setTimeout(() => {
+    document.querySelector("#result-container").style.display = "flex";
+    document.querySelector("#result").textContent =
+      gameState.langSelected === "en" ? "YOU WON!" : "GAGNÉ!";
+    document.querySelector("#result").style.color = "var(--tileGreen)";
+    document.querySelector("#result").style.textShadow = "1px 1px black";
+    displayScore(++gameState.score);
+  }, 2000);
 }
 
 function triggerDefeat() {
