@@ -36,13 +36,10 @@ import {
   triggerDefeat,
 } from "./wordleLib.js";
 
-// INIT state
+// init global state
 
 const ROWS = 6;
 let COLS = 0;
-
-const select = document.querySelector("#lang-select");
-select.selectedIndex = 0;
 
 let gameState = {
   score: 0,
@@ -52,6 +49,9 @@ let gameState = {
   charCountInline: 0,
   langSelected: "en",
 };
+
+const select = document.querySelector("#lang-select");
+select.selectedIndex = 0;
 
 // Condition pour contrer le fetch intempestif à chaque touche ENTER pressée
 // l'event "click" sur le boutton newGame était déclenché.
@@ -177,7 +177,6 @@ function getKeyboardInput() {
     }
 
     // Handle line validation with ENTER key
-
     // not enough chars in line
     else if (
       letter == "ENTER" &&
