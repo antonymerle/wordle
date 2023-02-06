@@ -18,9 +18,9 @@
   DONE : center h1
   DONE : handle not enough letters with css
   DONE : favicon
+  DONE : fix bug display soluce when win on 6th row
   TODO : factorize
   TODO : clean code
-  TODO : fix bug display soluce when win on 6th row
 */
 
 import { translate, setAPILang } from "./translate.js";
@@ -80,19 +80,9 @@ document.querySelector("#newGame").addEventListener("click", () => {
           // Returns a word array
           const randomArrayIndex = Math.floor(Math.random() * data.length);
           const frenchWord = data[randomArrayIndex];
-          // normalize accents
-          /*
-          1. normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones. 
-          The è of Crème ends up expressed as e + ̀.
-          2. Using a regex character class to match the U+0300 → U+036F range, it is now trivial to globally get rid of the diacritics, 
-          which the Unicode standard conveniently groups as the Combining Diacritical Marks Unicode block. 
-          */
-          gameState.mysteryWord = frenchWord
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
+          gameState.mysteryWord = normalizeLatinAccents(frenchWord);
         }
       }
-
       console.log(gameState.mysteryWord);
 
       concealRule();
@@ -383,6 +373,16 @@ function revealResults() {
 
 function printYear() {
   document.querySelector("#date").innerHTML = new Date().getFullYear();
+}
+
+function normalizeLatinAccents(frenchWord) {
+  /*
+  1. normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones. 
+  The è of Crème ends up expressed as e + ̀.
+  2. Using a regex character class to match the U+0300 → U+036F range, it is now trivial to globally get rid of the diacritics, 
+  which the Unicode standard conveniently groups as the Combining Diacritical Marks Unicode block. 
+  */
+  return frenchWord.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 displayScore();
