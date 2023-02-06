@@ -20,6 +20,7 @@
   DONE : favicon
   TODO : factorize
   TODO : clean code
+  TODO : fix bug display soluce when win on 6th row
 */
 
 import { translate, setAPILang } from "./translate.js";
@@ -170,9 +171,6 @@ function getKeyboardInput() {
       return;
     }
 
-    // game over if board is full
-    if (gameState.inputArray.length >= ROWS * COLS) triggerDefeat();
-
     // Handle saisie
     const letter = e.key.toUpperCase();
 
@@ -292,7 +290,7 @@ function checkLine(indexOfLastChar) {
     .slice(startIndex, indexOfLastChar)
     .join("");
 
-  // tests condition victoire
+  // tests win/lose
   if (lineContent.toLowerCase() === gameState.mysteryWord.toLowerCase()) {
     // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
     setTimeout(() => {
@@ -303,6 +301,12 @@ function checkLine(indexOfLastChar) {
       document.querySelector("#result").style.textShadow = "1px 1px black";
       displayScore(++gameState.score);
     }, 2000);
+  } else if (
+    // game over if board is full
+    gameState.inputArray.length >= ROWS * COLS &&
+    lineContent.toLowerCase() !== gameState.mysteryWord.toLowerCase()
+  ) {
+    triggerDefeat(); // TODO: erreur display soluce => à mettre dans checkLine() ?
   }
 }
 
@@ -338,7 +342,6 @@ function initGame() {
 
 function triggerDefeat() {
   console.log("trigger defeat");
-  checkLine(gameState.inputArray.length);
   document.querySelector("#result").textContent =
     gameState.langSelected === "en" ? "GAME OVER" : "PERDU";
   document.querySelector("#result").style.color = "var(--brun)";
