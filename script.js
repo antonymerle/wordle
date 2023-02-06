@@ -24,6 +24,17 @@
 */
 
 import { translate, setAPILang } from "./translate.js";
+import {
+  initBoard,
+  displayBoard,
+  generateHTMLTable,
+  concealRule,
+  concealResults,
+  printYear,
+  normalizeLatinAccents,
+  displayScore,
+  triggerDefeat,
+} from "./wordleLib.js";
 
 // INIT state
 
@@ -93,50 +104,13 @@ document.querySelector("#newGame").addEventListener("click", () => {
     .catch((error) => console.log({ error }));
 });
 
-function initBoard(rows, cols) {
-  const board = new Array(rows);
-  for (let i = 0; i < rows; i++) {
-    board[i] = new Array(cols);
-  }
+displayScore(gameState.score);
+translate(gameState.langSelected);
+printYear();
 
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      board[i][j] = null;
-    }
-  }
-
-  return board;
-}
-
-const displayBoard = () => {
-  for (let i = 0; i < gameState.board.length; i++) {
-    let row = "";
-    for (let j = 0; j < gameState.board[i].length; j++) {
-      row += `[${gameState.board[i][j] ? gameState.board[i][j] : " "}]`;
-    }
-    console.log(row);
-  }
-};
-
-function generateHTMLTable() {
-  let container = document.querySelector("#game-board");
-  let table = "";
-  table += "<table>";
-
-  for (let i = 0; i < gameState.board.length; i++) {
-    table += `<tr class="letter-row" id="tr-${i}">`;
-    for (let j = 0; j < gameState.board[i].length; j++) {
-      table += `<td class="letter-box" id="td-${
-        gameState.board[i].length * i + j
-      }"></td>`;
-    }
-    table += "</tr>";
-  }
-
-  table += "</table>";
-
-  container.innerHTML += table;
-}
+/****************************************
+ * functions mutating global game state *
+ ****************************************/
 
 function getKeyboardInput() {
   try {
@@ -246,9 +220,8 @@ function checkLine(indexOfLastChar) {
   */
   // Edge case l'utilisateur appuie sur entrée sans avoir entré de lettres
   if (gameState.inputArray.length === 0) return;
-
-  const startIndex = indexOfLastChar - 5;
   let verif = "";
+  const startIndex = indexOfLastChar - 5;
   // vérification de chaque lettre de la ligne par rapport au mot mystère
   for (let i = startIndex, j = 0; i < indexOfLastChar; i++, j++) {
     console.log(gameState.inputArray);
@@ -288,12 +261,8 @@ function checkLine(indexOfLastChar) {
     gameState.inputArray.length >= ROWS * COLS &&
     lineContent.toLowerCase() !== gameState.mysteryWord.toLowerCase()
   ) {
-    triggerDefeat();
+    triggerDefeat(gameState.langSelected, gameState.mysteryWord);
   }
-}
-
-function displayScore() {
-  document.querySelector("#score").textContent = gameState.score;
 }
 
 function resetState() {
@@ -318,8 +287,8 @@ function initGame() {
 
   // generate HTML board from data structure
   gameState.board = initBoard(ROWS, COLS);
-  displayBoard();
-  generateHTMLTable();
+  displayBoard(gameState.board);
+  generateHTMLTable(gameState.board);
 }
 
 function triggerVictory() {
@@ -333,58 +302,3 @@ function triggerVictory() {
     displayScore(++gameState.score);
   }, 2000);
 }
-
-function triggerDefeat() {
-  console.log("trigger defeat");
-  document.querySelector("#result").textContent =
-    gameState.langSelected === "en" ? "GAME OVER" : "PERDU";
-  document.querySelector("#result").style.color = "var(--brun)";
-
-  // timeout pour ne pas supprimer trop vite l'état dont dépend la boucle timeout de checkLine
-  setTimeout(() => {
-    revealResults();
-    revealSoluce();
-  }, 2000);
-
-  console.log("return défaite");
-}
-
-function revealSoluce() {
-  console.log(gameState.langSelected);
-
-  const soluceTraduction =
-    gameState.langSelected === "en" ? "Mystery word : " : "Solution : ";
-  document.querySelector("#soluce").textContent =
-    soluceTraduction + gameState.mysteryWord;
-  document.querySelector("#soluce").style.color = "var(--brun)";
-}
-
-function concealRule() {
-  document.querySelector("#rules").style.display = "none";
-}
-
-function concealResults() {
-  document.querySelector("#result-container").style.display = "none";
-}
-
-function revealResults() {
-  document.querySelector("#result-container").style.display = "block";
-}
-
-function printYear() {
-  document.querySelector("#date").innerHTML = new Date().getFullYear();
-}
-
-function normalizeLatinAccents(frenchWord) {
-  /*
-  1. normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones. 
-  The è of Crème ends up expressed as e + ̀.
-  2. Using a regex character class to match the U+0300 → U+036F range, it is now trivial to globally get rid of the diacritics, 
-  which the Unicode standard conveniently groups as the Combining Diacritical Marks Unicode block. 
-  */
-  return frenchWord.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
-displayScore();
-translate(gameState.langSelected);
-printYear();
