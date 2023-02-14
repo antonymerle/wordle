@@ -94,6 +94,10 @@ h1 {
   font-family: "Roboto Slab", serif;
 }
 
+#newGame:focus {
+  outline: none;
+}
+
 #result-container {
   display: flex;
   flex-direction: column;
