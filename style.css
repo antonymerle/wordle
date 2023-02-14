@@ -231,7 +231,6 @@ a {
     width: auto;
   }
   #newGame {
-    z-index: 2;
     width: 100px;
     height: 40px;
     font-weight: 500;
@@ -246,5 +245,11 @@ a {
     font-size: small;
     overflow-wrap: break-word;
     padding: 1rem;
+  }
+}
+
+@media (max-width: 960px) {
+  h4 {
+    left: 200px;
   }
 }
